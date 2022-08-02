@@ -8,6 +8,7 @@ import "hardhat-deploy";
 import "hardhat-contract-sizer";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "./tasks";
 
 import { HardhatUserConfig } from "hardhat/config";
 
@@ -44,12 +45,47 @@ const config: HardhatUserConfig = {
       gasPrice: 250000000000,
     },
   },
+  // NEED TO SET!
   namedAccounts: {
     deployer: {
       default: 0,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
     },
     dev: {
       default: 1,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    team: {
+      default: 2,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    investor0: {
+      default: 3,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    investor1: {
+      default: 4,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    investor2: {
+      default: 5,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    marketing: {
+      default: 6,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
+    },
+    treasury: {
+      default: 7,
+      baobab : "0x0000000000000000000000000000000000000000",
+      cypress: "0x0000000000000000000000000000000000000000"
     },
   },
   paths: {

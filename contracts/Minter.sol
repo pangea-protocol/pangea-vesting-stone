@@ -2,13 +2,13 @@
 
 pragma solidity >=0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "./interfaces/IStoneMint.sol";
 import "./interfaces/INotifyMint.sol";
 
 /// @notice Pangea's Governance Token inflation System (it works after 4 years )
-contract Minter is OwnableUpgradeable {
+contract Minter is Ownable {
 
     IStoneMint public stone;
     address public treasury;
@@ -18,11 +18,11 @@ contract Minter is OwnableUpgradeable {
     uint256 public period = 90 days;
     uint256 public inflationRate = 500;
 
-    function initialize(
+    constructor(
         address _stone,
         address _treasury,
         uint256 _epochStartTime
-    ) external initializer {
+    ) {
         require(_stone != address(0));
         require(_treasury != address(0));
         require(_epochStartTime >= block.timestamp);
@@ -30,8 +30,6 @@ contract Minter is OwnableUpgradeable {
         stone = IStoneMint(_stone);
         treasury = _treasury;
         epochStartTime = _epochStartTime;
-
-        __Ownable_init();
     }
 
     // @notice update Treasury address

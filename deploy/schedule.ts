@@ -23,26 +23,31 @@ const deployFunction: DeployFunction = async function ({
   const vestingStone = (await ethers.getContract('VestingStone')) as VestingStone;
 
   const vestingSchedule = [
-    Date.UTC(2022, 11, 18),
+    // 2022-11-18
+    Date.UTC(2022, 10, 18),
 
-    Date.UTC(2023, 2, 18),
-    Date.UTC(2023, 5, 18),
-    Date.UTC(2023, 8, 18),
-    Date.UTC(2023, 11, 18),
+    // 2023-02-18
+    Date.UTC(2023, 1, 18),
+    Date.UTC(2023, 4, 18),
+    Date.UTC(2023, 7, 18),
+    Date.UTC(2023, 10, 18),
 
-    Date.UTC(2024, 2, 18),
-    Date.UTC(2024, 5, 18),
-    Date.UTC(2024, 8, 18),
-    Date.UTC(2024, 11, 18),
+    // 2024-02-18
+    Date.UTC(2024, 1, 18),
+    Date.UTC(2024, 4, 18),
+    Date.UTC(2024, 7, 18),
+    Date.UTC(2024, 10, 18),
 
-    Date.UTC(2025, 2, 18),
-    Date.UTC(2025, 5, 18),
-    Date.UTC(2025, 8, 18),
-    Date.UTC(2025, 11, 18),
+    // 2025-02-18
+    Date.UTC(2025, 1, 18),
+    Date.UTC(2025, 4, 18),
+    Date.UTC(2025, 7, 18),
+    Date.UTC(2025, 10, 18),
 
-    Date.UTC(2026, 2, 18),
-    Date.UTC(2026, 5, 18),
-    Date.UTC(2026, 8, 18),
+    // 2026-02-18
+    Date.UTC(2026, 1, 18),
+    Date.UTC(2026, 4, 18),
+    Date.UTC(2026, 7, 18),
   ].map(e=> BigNumber.from(Math.floor(e / 1000)))
 
 
@@ -84,7 +89,7 @@ const deployFunction: DeployFunction = async function ({
     await doTransaction(
         vestingStone.grantOption(
           team,
-          teamAmount.div(N),
+          i == N ? teamAmount.sub(teamAmount.div(N).mul(N-1)) : teamAmount.div(N),
           expirationTime
         )
     );
@@ -92,7 +97,7 @@ const deployFunction: DeployFunction = async function ({
     await doTransaction(
         vestingStone.grantOption(
             investor0,
-            investor0Amount.div(N),
+            i == N ? investor0Amount.sub(investor0Amount.div(N).mul(N-1)) : investor0Amount.div(N),
             expirationTime
         )
     );
@@ -100,7 +105,7 @@ const deployFunction: DeployFunction = async function ({
     await doTransaction(
         vestingStone.grantOption(
             investor1,
-            investor1Amount.div(N),
+            i == N ? investor1Amount.sub(investor1Amount.div(N).mul(N-1)) : investor1Amount.div(N),
             expirationTime
         )
     );
@@ -108,7 +113,7 @@ const deployFunction: DeployFunction = async function ({
     await doTransaction(
         vestingStone.grantOption(
             investor2,
-            investor2Amount.div(N),
+            i == N ? investor2Amount.sub(investor2Amount.div(N).mul(N-1)) : investor2Amount.div(N),
             expirationTime
         )
     );
@@ -117,13 +122,13 @@ const deployFunction: DeployFunction = async function ({
     await doTransaction(
         vestingStone.grantOption(
             treasury,
-            treasuryAmount.div(N+1),
+            i == N ? treasuryAmount.sub(treasuryAmount.div(N+1).mul(N)) : treasuryAmount.div(N+1),
             expirationTime
         )
     );
   }
   const { deploy } = deployments;
-  await deploy('Minter', {
+  const {address:minterAddress} = await deploy('Minter', {
     from:deployer,
     log:true,
     args:[
@@ -132,6 +137,10 @@ const deployFunction: DeployFunction = async function ({
         vestingSchedule[vestingSchedule.length-1]
     ]
   });
+
+  await doTransaction(
+      stone.transferOwnership(minterAddress)
+  );
 };
 
 export default deployFunction;

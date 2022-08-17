@@ -1,6 +1,7 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {Stone, VestingStone} from "../types";
+import {BigNumber} from "ethers";
 
 const deployFunction: DeployFunction = async function ({
                                                          deployments,
@@ -15,7 +16,8 @@ const deployFunction: DeployFunction = async function ({
   await deploy('VestingStone', {
     from:deployer,
     args:[stone.address],
-    log:true
+    log:true,
+    gasPrice: BigNumber.from("250000000000")
   });
 };
 

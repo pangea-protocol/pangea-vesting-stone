@@ -29,7 +29,10 @@ describe("Vesting Stone", function () {
     const Stone = await ethers.getContractFactory('Stone')
     stone = await Stone.deploy() as Stone;
 
-    const VestingStone = await ethers.getContractFactory("VestingStone");
+    const StoneImage = await ethers.getContractFactory("StoneImage");
+    const image = await StoneImage.deploy();
+
+    const VestingStone = await ethers.getContractFactory("VestingStone", {libraries:{StoneImage: image.address}});
     vestingStone = await VestingStone.deploy(stone.address) as VestingStone;
 
     snapshotId = await ethers.provider.send("evm_snapshot", []);

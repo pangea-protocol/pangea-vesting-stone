@@ -13,11 +13,18 @@ const deployFunction: DeployFunction = async function ({
 
   const stone = (await ethers.getContract('Stone')) as Stone;
 
+  const {address} = await deploy('StoneImage',{
+    from:deployer
+  });
+
   await deploy('VestingStone', {
     from:deployer,
     args:[stone.address],
     log:true,
-    gasPrice: BigNumber.from("250000000000")
+    gasPrice: BigNumber.from("250000000000"),
+    libraries: {
+      StoneImage: address
+    }
   });
 };
 

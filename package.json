@@ -15,7 +15,7 @@
     "build": "TS_NODE_TRANSPILE_ONLY=1 hardhat compile --network hardhat",
     "clean": "hardhat clean",
     "hardhat:deploy": "hardhat node --network hardhat",
-    "baobab:deploy": "hardhat --network baobab deploy",
+    "baobab:deploy": "hardhat --network baobab deploy --tags vestingStone",
     "cypress:deploy": "hardhat --network cypress deploy",
     "cypress:export": "hardhat --network cypress export",
     "test": "hardhat test --network hardhat",

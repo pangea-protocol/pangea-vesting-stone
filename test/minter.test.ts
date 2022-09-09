@@ -3,10 +3,11 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-wit
 import chai, { expect } from "chai";
 import {FakeContract, smock} from "@defi-wonderland/smock";
 import {INotifyMint, Minter, Stone} from "../types";
+import {ContractFactory} from "ethers";
 
 chai.use(smock.matchers);
 
-describe.only("Minter", function () {
+describe("Minter", function () {
 
   let _snapshotId: string;
   let snapshotId: string;
@@ -15,6 +16,7 @@ describe.only("Minter", function () {
   let treasury: SignerWithAddress;
   let treasuryContract: FakeContract<INotifyMint>;
 
+  let Minter: ContractFactory;
   let minter: Minter;
   let stone: Stone;
 
@@ -28,8 +30,7 @@ describe.only("Minter", function () {
     const Stone = await ethers.getContractFactory('Stone')
     stone = await Stone.deploy() as Stone;
 
-    const Minter = await ethers.getContractFactory("Minter");
-    minter = await Minter.deploy() as Minter;
+    Minter = await ethers.getContractFactory("Minter");
 
     treasuryContract = await smock.fake<INotifyMint>("INotifyMint");
 
@@ -51,12 +52,12 @@ describe.only("Minter", function () {
     await ethers.provider.send("evm_mine", []);
   }
 
-  describe("# initialize", async () => {
+  describe("# deploy", async () => {
 
     it("revert stone == address(0)", async () => {
       const {timestamp} = await ethers.provider.getBlock('latest');
 
-      await expect(minter.initialize(
+      await expect(Minter.deploy(
           ethers.constants.AddressZero,
           treasury.address,
           timestamp + 100
@@ -66,7 +67,7 @@ describe.only("Minter", function () {
     it("revert treasury == address(0)", async () => {
       const {timestamp} = await ethers.provider.getBlock('latest');
 
-      await expect(minter.initialize(
+      await expect(Minter.deploy(
           stone.address,
           ethers.constants.AddressZero,
           timestamp + 100
@@ -76,17 +77,17 @@ describe.only("Minter", function () {
     it("revert epochStartTime <= block.timestamp", async () => {
       const {timestamp} = await ethers.provider.getBlock('latest');
 
-      await expect(minter.initialize(
+      await expect(Minter.deploy(
           stone.address,
           treasury.address,
           timestamp - 100
       )).to.be.reverted;
     })
 
-    it("initialize success", async () => {
+    it("deploy success", async () => {
       const {timestamp} = await ethers.provider.getBlock('latest');
 
-      await expect(minter.initialize(
+      await expect(Minter.deploy(
           stone.address,
           treasury.address,
           timestamp + 100
@@ -98,15 +99,15 @@ describe.only("Minter", function () {
 
     let epochStartTime: number;
 
-    beforeEach("initialize", async () => {
+    beforeEach("deploy", async () => {
       const {timestamp} = await ethers.provider.getBlock('latest');
       epochStartTime = timestamp + 3600;
 
-      await minter.initialize(
+      minter = await Minter.deploy(
           stone.address,
           treasury.address,
           epochStartTime
-      );
+      ) as Minter;
 
       // migrate Minter role
       await stone.setMinter(minter.address);

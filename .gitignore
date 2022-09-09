@@ -9,6 +9,7 @@ cache/
 artifacts/
 types/
 deployments/abis
+deployments/localhost
 
 coverage/
 coverage.json

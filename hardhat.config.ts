@@ -34,33 +34,27 @@ const config: HardhatUserConfig = {
     },
     baobab: {
       chainId: 1001,
-      url: "https://public-node-api.klaytnapi.com/v1/baobab",
+      url: "https://baobab.ken.stick.us",
       accounts,
       gasPrice: 250000000000,
     },
     cypress: {
       chainId: 8217,
-      url: "https://public-node-api.klaytnapi.com/v1/cypress",
-      accounts,
+      url: "https://ken.stick.us",
+      accounts:[process.env.DEPLOYER!,process.env.DEV!],
       gasPrice: 250000000000,
     },
   },
   // NEED TO SET!
   namedAccounts: {
     deployer: {
-      default: 0,
-      baobab : "0x0000000000000000000000000000000000000000",
-      cypress: "0x0000000000000000000000000000000000000000"
+      default: 0
     },
     dev: {
-      default: 1,
-      baobab : "0x0000000000000000000000000000000000000000",
-      cypress: "0x0000000000000000000000000000000000000000"
+      default: 1
     },
     team: {
-      default: 2,
-      baobab : "0x0000000000000000000000000000000000000000",
-      cypress: "0x0000000000000000000000000000000000000000"
+      default: 2
     },
     investor0: {
       default: 3,
